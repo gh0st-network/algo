@@ -76,8 +76,10 @@
           add_host:
             name: "{{ algo_server }}"
             groups: vpn-host
+            # ES: server_user needs to be defined in future revisions of this script to reflect current user executing the script. Workaround is to change default() to the current user.  
             ansible_ssh_user: "{{ server_user|default('root') }}"
-            ansible_connection: "{% if algo_server == 'localhost' %}local{% else %}ssh{% endif %}"
+            # ES: force local eitherway. Authentication related issues encountered on local deployment with playbook attempting to ssh to itself 
+            ansible_connection: "{% if algo_server == 'localhost' %}local{% else %}local{% endif %}"
             ansible_python_interpreter: /usr/bin/python3
             CA_password: "{{ CA_password|default(omit) }}"
       rescue:
